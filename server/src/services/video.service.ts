@@ -1,5 +1,9 @@
 import fs from 'fs'
 import ffmpeg from 'fluent-ffmpeg'
+import {
+  createMovie,
+  updateMovieStatus,
+} from '../repositories/movie.repository'
 
 interface Resolution {
   width: number
@@ -19,6 +23,8 @@ export function processVideo(
   outputPath: string,
   callbackFn: (error: Error | null, masterPlayList?: string) => void,
 ): void {
+  createMovie(outputPath)
+
   fs.mkdirSync(outputPath, { recursive: true })
   const masterPlayList = `${outputPath}/master.m3u8`
   const masterContent: string[] = []
@@ -53,7 +59,7 @@ export function processVideo(
             masterPlayList,
             `#EXTM3U\n${masterContent.join('\n')}`,
           )
-
+          updateMovieStatus(outputPath, 'COMPLETED')
           callbackFn(null, masterPlayList)
         }
       })
