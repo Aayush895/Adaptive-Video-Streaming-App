@@ -15,7 +15,7 @@ export async function uploadVideoController(req: Request, res: Response) {
   const videoPath = req.file.path
   const outputPath = `output/${Date.now()}`
   
-  processVideo(videoPath, outputPath, (err, _) => {
+  processVideo(videoPath, outputPath, (err, masterPlaylistPath) => {
     if (err) {
       res.status(500).json({
         success: false,
@@ -34,6 +34,7 @@ export async function uploadVideoController(req: Request, res: Response) {
     return res.status(200).json({
       success: true,
       message: 'Video is uploaded successfully',
+      data: `/${masterPlaylistPath}`
     })
   })
 }

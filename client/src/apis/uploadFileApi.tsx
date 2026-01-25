@@ -7,5 +7,5 @@ export async function sendFileUploadReq(url: string, formData: FormData) {
     },
   })
 
-  console.log(response.data)
+  return response.data
 }

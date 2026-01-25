@@ -6,7 +6,9 @@ import apiRouter from './routes'
 
 const app: Express = express()
 
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:5173'
+}))
 app.use('/api', apiRouter)
 
 console.log(path.join(__dirname, '../output'))

@@ -1,7 +1,9 @@
-import { type ChangeEvent } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { sendFileUploadReq } from '../apis/uploadFileApi'
+import VideoPlay from './VideoPlay';
 
 function VideoUploadForm() {
+  const [videoId, setVideoId] = useState('');
   const url: string = import.meta.env.VITE_BACKEND_URL
 
   async function handleFileUpload(e: ChangeEvent<HTMLInputElement>) {
@@ -17,7 +19,8 @@ function VideoUploadForm() {
       const formData = new FormData()
       formData.append('video', file)
 
-      await sendFileUploadReq(`${url}/upload`, formData)
+      const response = await sendFileUploadReq(`${url}/upload`, formData)
+      setVideoId(response.data.split('/')[2])
     } catch (error) {
       console.log('Something went wrong', error)
     }
@@ -25,7 +28,7 @@ function VideoUploadForm() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center py-8 px-4">
-      <div className="max-w-md w-full bg-white shadow-lg rounded-lg p-6">
+      <div className="max-w-md w-full bg-white shadow-md rounded-lg p-6">
         <h1>Upload your video here</h1>
 
         <input
@@ -34,6 +37,7 @@ function VideoUploadForm() {
           className="block w-full text-sm text-gray-700 rounded-lg border border-gray-300 p-2 mt-2 cursor-pointer bg-gray-500 mb-4"
         />
       </div>
+      {videoId.length != 0 && <VideoPlay videoId={videoId}/>}
     </div>
   )
 }
